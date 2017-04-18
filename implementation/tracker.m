@@ -15,6 +15,8 @@ scale_step = params.scale_step;
 CG_tol = params.CG_tol;
 newton_iterations = params.newton_iterations;
 features = params.t_features;
+ground_truth = params.ground_truth;
+failures = 0;
 
 bbox_output = true;
 file_path = strcat(params.path_result, 'result_', params.video_name, '.txt');
@@ -355,10 +357,23 @@ for frame = 1:num_frames,
     %save position and calculate FPS
     rect_position(frame,:) = [pos([2,1]) - floor(target_sz([2,1])/2), target_sz([2,1])];
     
-     if bbox_output
-            fprintf(file_output,'%.2f,%.2f,%.2f,%.2f\n', rect_position(frame, :));
-        end
+    overlap = bboxOverlapRatio(rect_position(frame, :), ground_truth(frame, :));
     
+      % restart bb with ground truth
+      if overlap < 0.01
+        disp(rect_position(frame, :));
+        rect_position(frame, :) = ground_truth(frame, :);
+        disp(rect_position(frame, :));
+        failures = failures + 1;
+        disp('Perdeu');
+     end
+    
+     if bbox_output
+            fprintf(file_output,'%.2f,%.2f,%.2f,%.2f,%.2f,%d\n', rect_position(frame, :), overlap, failures);
+     end
+    
+    
+        
     time = time + toc();
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
