@@ -25,7 +25,7 @@ end
 % matconvnet
 if exist('external_libs/matconvnet/matlab', 'dir') == 7
     cd external_libs/matconvnet/matlab
-    vl_compilenn;
+    vl_compilenn('enableGpu', true, 'cudaMethod', 'nvcc', 'cudaRoot', '/usr/local/cuda-7.5/', 'enableCudnn', true, 'cudnnRoot', '/usr/local/cuda/lib64');
     status = movefile('mex/vl_*.mex*');
     cd(home_dir)
     

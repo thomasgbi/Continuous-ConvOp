@@ -16,6 +16,12 @@ CG_tol = params.CG_tol;
 newton_iterations = params.newton_iterations;
 features = params.t_features;
 
+bbox_output = true;
+file_path = strcat(params.path_result, 'result_', params.video_name, '.txt');
+disp(file_path);
+file_output = fopen(file_path, 'w');
+
+
 % Set some default parameters
 if isfield(params, 't_global')
     global_fparams = params.t_global;
@@ -51,6 +57,7 @@ params.nSamples = min(params.nSamples, num_frames);
 init_target_sz = target_sz;
 
 % Calculate feature dimension
+disp(s_frames{1});
 im = imread(s_frames{1});
 if size(im,3) == 3
     if all(all(im(:,:,1) == im(:,:,2)))
@@ -348,6 +355,10 @@ for frame = 1:num_frames,
     %save position and calculate FPS
     rect_position(frame,:) = [pos([2,1]) - floor(target_sz([2,1])/2), target_sz([2,1])];
     
+     if bbox_output
+            fprintf(file_output,'%.2f,%.2f,%.2f,%.2f\n', rect_position(frame, :));
+        end
+    
     time = time + toc();
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -446,6 +457,7 @@ for frame = 1:num_frames,
 end
 
 % close(writer);
+fclose(file_output);
 
 fps = numel(s_frames) / time;
 

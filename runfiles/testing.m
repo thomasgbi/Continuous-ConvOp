@@ -3,6 +3,9 @@ function results=testing(seq, res_path, bSaveImage, parameters)
 close all
 
 s_frames = seq.s_frames;
+params.video_name = seq.video_name;
+params.ground_truth = seq.ground_truth;
+params.path_result = seq.path_result;
 
 % Feature specific parameters
 hog_params.cell_size = 4;
