@@ -360,7 +360,7 @@ for frame = 1:num_frames,
     overlap = bboxOverlapRatio(rect_position(frame, :), ground_truth(frame, :));
     
       % restart bb with ground truth
-      if overlap < 0.01
+      if overlap < 0.2
         disp(rect_position(frame, :));
         rect_position(frame, :) = ground_truth(frame, :);
         disp(rect_position(frame, :));
